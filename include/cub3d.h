@@ -198,7 +198,7 @@ int						init_game_parsing(t_game *game);
 
 /* ----mlx---- */
 t_render				*init_render(void);
-void					mlx_start(t_render *render);
+void					mlx_start(t_game *game);
 void					draw_player(void *param);
 void					key_handler(mlx_key_data_t keydata, void *param);
 void					create_world(void *param);
