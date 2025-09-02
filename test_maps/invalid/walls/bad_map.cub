@@ -1,0 +1,11 @@
+NO ./brick1.jpg
+SO ./brick2.png
+WE ./brick3.jpg
+EA ./brick4.jpg
+
+F 220,100,0
+C 225,30,0
+
+
+1N1
+111

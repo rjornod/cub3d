@@ -1,33 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:18:05 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/15 15:54:38 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
 #include "libft.h"
 
 size_t	ft_strlen(const char *str)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (str[i])
+	while (str[i] != '\0')
 		i++;
 	return (i);
 }
 
-// int	main(void)
-// {
-// 	char *str;
-// 	int n;
-// 	str = "Hello, world.";
-// 	n = ft_strlen(str);
-// 	printf("string length is %d", n);
-// 	return (0);
+// int main(void) {
+//     char* str = "Hello";
+//     int length = strlen(NULL);
+//     printf("%i", length);
 // }

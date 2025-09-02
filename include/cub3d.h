@@ -2,28 +2,125 @@
 # define CUB3D_H
 
 # include "../libs/MLX/include/MLX42/MLX42.h"
-//# include "../libs/gnl/get_next_line.h"
+# include "../libs/gnl/get_next_line.h"
 # include "../libs/libft/libft.h"
 # include <fcntl.h>
+# include <math.h>
 # include <stdarg.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-# define MOVEMENT 10.0f
-# define WIDTH 1240
-# define HEIGHT 1240
-# define PLAYER_COLOR 	0xFFFFFFFF
+# define DR 0.0174533 //one degree in radians, used to seperate each ray by 1 degree
+# define WIDTH 1920
+# define HEIGHT 1080
+# define PLAYER_COLOR 0xFF0000FF
+# define WALL 0xFFFFFFFF
+# define FLOOR 0x00FFFFFF
+# define PI 3.1415926535
+# define P2 PI / 2
+# define P3 3 * PI / 2
+# define MAP_X 25
+# define MAP_Y 14
+
+enum					keys_texture
+{
+	KEY_NO,
+	KEY_SO,
+	KEY_WE,
+	KEY_EA,
+	NUM_KEYS1
+};
+
+enum					player_chars
+{
+	KEY_N,
+	KEY_S,
+	KEY_W,
+	KEY_E,
+};
+
+enum					keys_colors
+{
+	KEY_F,
+	KEY_C,
+	NUM_KEYS2
+};
 
 typedef struct s_render
 {
 	mlx_t				*mlx;
 	mlx_image_t			*player_image;
+	mlx_image_t			*ray_image;
+	float				pos_x;
+	float				pos_y;
+	float				new_pos_x;
+	float				new_pos_y;
+	float				dir_x;
+	float				dir_y;
+	float				old_dir_x;
+	float				old_dir_y;
+	float				plane_x;
+	float				plane_y;
+	float				old_plane_x;
+	float				old_plane_y;
+	float				camera_x;
+	float				ray_dir_x;
+	float				ray_dir_y;
+	float				side_dist_x;
+	float				side_dist_y;
+	float				delta_dist_y;
+	float				delta_dist_x;
+	float				perp_wall_dist;
+	double				time;
+	double				old_time;
+	double				frame_time;
+	double				move_speed;
+	double				rotation_speed;
+	int					line_height;
+	int					draw_start;
+	int					draw_end;
+	//int					**map;
+	int					map_x;
+	int					map_y;
+	int					step_x;
+	int					step_y;
+	int					hit;
+	int					side;
+
+} t_render;
+
+typedef struct s_render2
+{
+	mlx_t				*mlx;
+	mlx_image_t			*player_image;
+	mlx_image_t			*ray_image;
 	float				player_x;
 	float				player_y;
-	float				player_dir;
-	
-} 						t_render;
+	float				player_delta_x;
+	float				player_delta_y;
+	float				player_angle;
+	float				ray_angle;
+	float				ray_y;
+	float				ray_x;
+	float				h_distance;
+	float				v_distance;
+	float				horizontal_ray_x_pos; //horizontal ray's x positions
+	float				horizontal_ray_y_pos; //horizontal ray's y positions
+	float				vertical_ray_x_pos; //vertical ray's x positions
+	float				vertical_ray_y_pos; //vertical ray's y positions
+	float				line_height;
+	float				line_offset;
+	int					ray;
+	float				y_offset;
+	float				x_offset;
+	int 				dof;
+	int					final_dist;
+	int					m_x;
+	int					m_y;
+	int					mp;
+	int					*map;
+}						t_render2;
 
 typedef struct s_texture
 {
@@ -37,7 +134,16 @@ typedef struct s_color
 {
 	char				*f_color;
 	char				*c_color;
+	unsigned long		f_rgb;
+	unsigned long		c_rgb;
 }						t_color;
+
+typedef struct s_map
+{
+	size_t				max_len;
+	size_t				num_rows;
+	char				player_letter;
+}						t_map;
 
 typedef struct s_game
 {
@@ -46,6 +152,7 @@ typedef struct s_game
 	struct s_texture	*textures;
 	struct s_color		*colors;
 	struct s_render		*render;
+	struct s_map		*map_info;
 }						t_game;
 
 /*parsing*/
@@ -55,16 +162,54 @@ bool					is_valid_input_file(char *file_name);
 int						parse_map(t_game *game, char *file);
 bool					is_map_last(char **map);
 int						find_textures(char **map);
-
+bool					no_invalid_input(char *line, int in_map);
+int						count_num_lines(char *file);
+int						parse_file(char **file);
+bool					is_valid_color(char *file);
+bool					is_valid_color_line(char *line);
+bool					is_color(char *line);
+bool					is_texture(char *line);
+bool					is_color(char *line);
+t_map					find_map_size(char **file);
+int						validate_map(t_game *game, char **initial_file,
+							t_render *render);
+char					**map_for_valid(char **file, t_map *map_dim);
+int						ft_dfs_inside(char **map, size_t row, size_t col,
+							t_map *map_dim);
+bool					map_chars_valid(char **map, t_map *map_for_pos);
+void					find_player_position(char **map, t_render *render,
+							t_map *map_for_pos);
+int						init_game_parsing(t_game *game);
+int						implement_parsing(t_game *game, t_render *render, 
+							int argc, char **argv);
 /*utils*/
 void					free_2darray_partial(char **arr, int num);
 void					free_2darray(char **arr);
+void					print_2d_array(char **arr);
+int						ft_count_substrings(const char *s, char c);
+void					free_2dint_partial(int **arr, int num);
+void					free_2dint(int **arr);
+int						parse_colors(t_game *game);
+void					copy_string(char *checking_char, char *color);
+int						parse_textures(t_game *game);
+int						malloc_map(char **map, t_map *map_dim);
+void					free_game(t_game *game);
+int						init_game_parsing(t_game *game);
 
-/*mlx*/
-t_render				*init_render();
+/* ----mlx---- */
+t_render				*init_render(void);
 void					mlx_start(t_render *render);
 void					draw_player(void *param);
-void 					key_handler(mlx_key_data_t keydata, void *param);
+void					key_handler(mlx_key_data_t keydata, void *param);
+void					create_world(void *param);
+void					put_tile(mlx_image_t *image, int start_x, int start_y,
+							int size, uint32_t color);
+void					draw_rays(t_render *render);
+int						draw_line(t_render *render, int begin_x, int begin_y, int end_x, int end_y);
+void 					draw_col(t_render *render, int x);
 
+/* ----render utils---- */
+float					distance(float ax, float ay, float bx, float by,
+							float ang);
 
 #endif

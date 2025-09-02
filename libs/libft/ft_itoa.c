@@ -1,101 +1,81 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:06:19 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/14 17:16:17 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <assert.h>
 #include "libft.h"
 
-static int	nlen(int n)
+static void	ft_itoa_helper(int n, char *arr, int *i)
+{
+	if (n > 9)
+		ft_itoa_helper(n / 10, arr, i);
+	arr[*i] = n % 10 + '0';
+	(*i)++;
+}
+
+static int	ft_num_len(int n)
 {
 	int	len;
 
-	len = 2;
-	if (n < 0)
+	len = 0;
+	if (n <= 0)
+		len = 1;
+	while (n != 0)
 	{
-		n = -n;
-		len = 3;
-	}
-	while (n / 10 > 0)
-	{
-		n = n / 10;
 		len++;
+		n /= 10;
 	}
 	return (len);
 }
 
-static char	*minus(int n)
-{
-	char	*str;
-	int		len;
-	int		i;
-
-	len = nlen(n);
-	n = -n;
-	str = (char *)malloc(len * sizeof(char));
-	if (!str)
-		return (NULL);
-	i = len - 1;
-	str[0] = '-';
-	str[i] = '\0';
-	i -= 1;
-	while (i > 0)
-	{
-		str[i] = n % 10 + 48;
-		n = n / 10;
-		i--;
-	}
-	return (str);
-}
-
-static char	*positive(int n)
-{
-	char	*str;
-	int		len;
-	int		i;
-
-	len = nlen(n);
-	str = (char *)malloc(len * sizeof(char));
-	if (!str)
-		return (NULL);
-	i = len - 1;
-	str[i] = '\0';
-	i -= 1;
-	while (i >= 0)
-	{
-		str[i] = n % 10 + 48;
-		n = n / 10;
-		i--;
-	}
-	return (str);
-}
-
 char	*ft_itoa(int n)
 {
-	char	*str;
+	int		i;
+	char	*arr;
+	int		len;
 
-	if (n == 2147483647)
-		return (ft_strdup("2147483647\0"));
+	i = 0;
+	len = ft_num_len(n);
+	arr = (char *)malloc(len * sizeof(char) + 1);
+	if (arr == NULL)
+		return (NULL);
 	if (n == -2147483648)
-		return (ft_strdup("-2147483648\0"));
-	if (n == 0)
-		return (ft_strdup("0\0"));
+	{
+		ft_strlcpy(arr, "-2147483648", 12);
+		return (arr);
+	}
 	if (n < 0)
-		str = minus(n);
-	else
-		str = positive(n);
-	return (str);
+	{
+		arr[i++] = '-';
+		n = -n;
+	}
+	ft_itoa_helper(n, arr, &i);
+	arr[i] = '\0';
+	return (arr);
 }
 
-// int    main(void)
-// {
-//     int        n = -2147483648;
-//     char    *str = ft_itoa(n);
-//     printf("%s", str);
+// int main() {
+//     int num = -1234;
+//     char	*result = ft_itoa(num);
+// 	char 	*res = ft_itoa(-2147483648LL);
+//     if (result != NULL) {
+//         printf("%s\n", result);
+//         free(result);
+//     }
+// 	if (res != NULL) {
+//         printf("%s\n", res);
+//         free(result);
+//     }
+//     return 0;
 // }

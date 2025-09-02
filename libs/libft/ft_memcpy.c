@@ -1,48 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:11:13 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/13 17:08:10 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
+#include <string.h>
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
+void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	size_t				i;
-	unsigned char		*d;
-	const unsigned char	*s;
+	unsigned char	*ptr_src;
+	unsigned char	*ptr_dst;
+	size_t			i;
 
-	d = (unsigned char *)dest;
-	s = (const unsigned char *)src;
+	if (!dst && !src)
+		return (NULL);
+	ptr_dst = (unsigned char *)dst;
+	ptr_src = (unsigned char *)src;
 	i = 0;
-	if (d == NULL && s == NULL)
-		return (dest);
 	while (i < n)
 	{
-		d[i] = s[i];
+		ptr_dst[i] = ptr_src[i];
 		i++;
 	}
-	return (dest);
+	return (dst);
 }
 
-// int	main(void)
-// {
-// 	// int				i;
+// int main() {
+// 	char src[] = "Hello, World!";
+// 	char src2[] = "cat";
+// 	char dst[20];
 
-// 	// i = 0;
-// 	// unsigned char dest[10];
-// 	// unsigned char src[10] = "Flinder.";
-// 	// while(i < 10)
-// 	// {
-// 	// 	dest[i] = src[i];
-// 	// 	i++;
-// 	// }
-// 	printf("%s", (char *) ft_memcpy(NULL, NULL, 5));
+// 	ft_memcpy(dst, src, 14);
+// 	printf("Test 1: %s\n", dst);
+
+// 	ft_memcpy(dst, src, 0);
+//     printf("Test 2: 0 bytes: %s\n", dst);
+
+// 	ft_memcpy(dst, src2, 3);
+//     printf("Test 3: %s\n", dst);
+
 // 	return (0);
 // }

@@ -3,45 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tanja <tanja@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2025/02/26 11:31:38 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:12:01 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/11 13:21:08 by tanja            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
 #include "libft.h"
 
-void	*ft_memset(void *s, int c, size_t n)
+void	*ft_memset(void *b, int c, size_t len)
 {
 	size_t			i;
 	unsigned char	*ptr;
 
-	ptr = (unsigned char *)s;
+	ptr = (unsigned char *)b;
 	i = 0;
-	while (i < n)
+	while (i < len)
 	{
 		ptr[i] = (unsigned char)c;
 		i++;
 	}
-	return (ptr);
+	return (b);
 }
 
-// int	main(void)
-// {
-// 	char	s[10];
-// 	int		n;
-// 	int		i;
-// 	int		c;
-
-// 	n = 10;
-// 	i = 0;
-// 	c = 'p';
-// 	ft_memset(s, c, n);
-// 	while (i < n)
-// 	{
-// 		printf("%c", s[i]);
-// 		i++;
-// 	}
-// 	return (0);
+// int main() {
+// 	char buffer[10] = "Hello";
+// 	ft_memset(buffer, '*', 5);
+// 	printf("%s\n", buffer); 
+// 	return 0;
 // }

@@ -1,46 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tanja <tanja@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:11:44 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/11 17:07:28 by tanja            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <string.h>
 #include "libft.h"
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	unsigned char		*d;
-	const unsigned char	*s;
-	size_t				i;
+	unsigned char		*ptr_dst;
+	const unsigned char	*ptr_src;
 
-	i = n;
-	d = (unsigned char *)dest;
-	s = (const unsigned char *)src;
-	if (d == NULL && s == NULL)
-		return (dest);
-	if (d > s && d < s + n)
+	ptr_dst = (unsigned char *)dst;
+	ptr_src = (const unsigned char *)src;
+	if (ptr_dst == ptr_src || len == 0)
+		return (dst);
+	if (ptr_dst < ptr_src)
 	{
-		while (i-- > 0)
-			d[i] = s[i];
+		while (len--)
+			*ptr_dst++ = *ptr_src++;
 	}
 	else
 	{
-		i = 0;
-		while (i++ < n)
-			d[i - 1] = s[i - 1];
+		ptr_dst += (len - 1);
+		ptr_src += (len - 1);
+		while (len--)
+			*ptr_dst-- = *ptr_src--;
 	}
-	return (dest);
+	return (dst);
 }
 
-// int	main(void)
-// {
-// 	char str[] = "Hello, World!";
-// 	ft_memmove(str + 7, str, 5);
-// 	printf("%s\n", str); 
-// 	return (0);
+// int main(void) {
+//     char dst3[] = "abcdefg";
+//     char dst4[] = "abcdefg";  
+//     ft_memmove(dst3 + 2, dst3, 4);
+//     memmove(dst4 + 2, dst4, 4);
+//     printf("Custom memmove: %s\n", dst3);
+//     printf("Built-in memmove: %s\n", dst4);
 // }

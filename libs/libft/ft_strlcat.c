@@ -1,65 +1,53 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:17:36 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/13 13:02:40 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
 #include "libft.h"
 
-static void	addnull(size_t size, char *dst, size_t	dstlen, size_t	i)
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {
-	if (size - dstlen >= 1)
-		dst[dstlen + i] = '\0';
-}
-
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
-{
+	size_t	dst_len;
+	size_t	src_len;
 	size_t	i;
-	size_t	dstlen;
 
+	dst_len = ft_strlen(dst);
+	src_len = ft_strlen(src);
 	i = 0;
-	dstlen = ft_strlen(dst);
-	if (dstlen >= size)
-		dstlen = size;
-	if (ft_strlen(src) < size - dstlen && size != 0)
+	if (dstsize <= dst_len)
+		return (dstsize + src_len);
+	while ((src[i] != '\0') && ((dst_len + i) < (dstsize - 1)))
 	{
-		while (i < ft_strlen(src))
-		{
-			dst[dstlen + i] = src[i];
-			i++;
-		}
+		dst[dst_len + i] = src[i];
+		i++;
 	}
-	if (ft_strlen(src) >= size - dstlen && size != 0)
-	{
-		while (i + 1 < size - dstlen)
-		{
-			dst[dstlen + i] = src[i];
-			i++;
-		}
-	}
-	addnull(size, dst, dstlen, i);
-	return (ft_strlen(src) + dstlen);
+	dst[dst_len + i] = '\0';
+	return (dst_len + src_len);
 }
 
-// int	main(void)
+// int main(void)
 // {
-// 	char dst[30] = "there is no stars in the sky";
-// 	char dst1[30] = "there is no stars in the sky";
-// 	char src[] = "the cake is a lie !\0I'm hidden lol\r\n";
-// 	size_t dstlen;
-// 	size_t dstlen1;
-
-// 	dstlen = ft_strlcat(dst, src, 1);
-// 	dstlen1 = strlcat(dst1, src, 1);
-// 	printf("Concatenated string: \"%s\"\n", dst);
-// 	printf("Total length: %zu\n", dstlen);
-// 	printf("Concatenated string: \"%s\"\n", dst1);
-// 	printf("Total length: %zu\n", dstlen1);
-// 	return (0);
+// 	//Test1
+// 	char dst[50] = "Hello, ";
+// 	const char* src = "World!";
+// 	size_t result = ft_strlcat(dst, src, 50);
+// 	printf("Test 1 result: %zu\n", result);
+// 	printf("%s\n\n", dst);
+// 	//Test2
+// 	char dst1[10] = "Hello";
+//     const char *src1 = "World";
+//     size_t dstsize = 3;
+//     size_t result1 = ft_strlcat(dst1, src1, dstsize);
+//     printf("Test 2 result: %zu\n", result1);
+//     printf("dst: \"%s\"\n", dst1);
 // }

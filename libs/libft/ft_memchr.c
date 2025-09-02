@@ -1,38 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:10:15 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/13 12:42:50 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
 
 void	*ft_memchr(const void *s, int c, size_t n)
 {
+	unsigned char	*ptr_s;
 	size_t			i;
-	unsigned char	*ptr;
-	unsigned char	memc;
 
+	ptr_s = (unsigned char *)s;
 	i = 0;
-	ptr = (unsigned char *)s;
-	memc = (unsigned char)c;
 	while (i < n)
 	{
-		if (ptr[i] == memc)
-			return ((void *)&ptr[i]);
+		if (ptr_s[i] == (unsigned char)c)
+			return ((void *)(ptr_s + i));
 		i++;
 	}
 	return (NULL);
 }
 
-// int	main(void)
-// {
-// 	int str[] = {-49, 49, 1, -1, 0, -2, 2};
-// 	printf("%s", (char *)ft_memchr(str, -1, 7));
-// 	return (0);
+// int main() {
+// 	char s[] = "Hello, World!";
+// 	char* result;
+// 	result = (char*)ft_memchr(s, ',', 14);
+// 	printf("%s", result);
+// 	return 0;
 // }

@@ -3,47 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2025/04/27 21:14:46 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:17:01 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/13 13:09:01 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "libft.h"
 
-char	*ft_strjoin(const char *s1, const char *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int		i;
-	int		j;
-	char	*str;
+	size_t	i;
+	size_t	k;
+	char	*fresh_str;
 
-	i = 0;
-	j = 0;
-	str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!str)
+	if (!s1 || !s2)
 		return (NULL);
-	while (s1[i])
+	i = 0;
+	k = 0;
+	fresh_str = (char *)malloc((ft_strlen(s1) + ft_strlen(s2)) + 1);
+	if (!(fresh_str))
+		return (NULL);
+	while (s1[i] != '\0')
 	{
-		str[i] = s1[i];
+		fresh_str[i] = s1[i];
 		i++;
 	}
-	while (s2[j])
+	while (s2[k] != '\0')
 	{
-		str[i + j] = s2[j];
-		j++;
+		fresh_str[i] = s2[k];
+		k++;
+		i++;
 	}
-	str[i + j] = '\0';
-	return (str);
+	fresh_str[i] = '\0';
+	return (fresh_str);
 }
 
-// int	main(void)
+// int main(void)
 // {
-// 	char *s1 = "apple";
-// 	char *s2 = "banana";
-// 	char *str = ft_strjoin(s1, s2);
+// 	char* result;
 
-// 	printf("%s", str);
-// 	free (str);
-// 	return (0);
+// 	result = ft_strjoin("Hello, ", "World!");
+// 	if (result)
+// 	{
+// 		printf("Test case 1: Expected: 'Hello, World!', Got: '%s'\n", result);
+// 		free(result);
+// 	}
+// 	else
+// 	{
+// 		printf("Test case 1: Memory allocation failed.\n");
+// 	}
+
+// 	result = ft_strjoin("", "World!");
+// 	if (result)
+// 	{
+// 		printf("Test case 2: Expected: 'World!', Got: '%s'\n", result);
+// 		free(result);
+// 	}
+// 	else
+// 	{
+// 		printf("Test case 2: Memory allocation failed.\n");
+// 	}
 // }

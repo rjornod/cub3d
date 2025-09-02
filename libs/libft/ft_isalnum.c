@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tanja <tanja@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:04:57 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/11 13:15:09 by tanja            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include <stdio.h>
+#include "libft.h"
 
+// int	ft_isalpha(int c)
+// {
+// 	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
+// }
+// int	ft_isdigit(int c)
+// {
+// 	return (c >= 48 && c <= 57);
+// }
 int	ft_isalnum(int c)
 {
-	if (('0' <= c && c <= '9') || ('a' <= c && c <= 'z')
-		|| ('A' <= c && c <= 'Z'))
-		return (1);
-	else
-		return (0);
+	return (ft_isalpha(c) || ft_isdigit(c));
 }
-
-// int	main(void)
-// {
-// 	char	a;
-// 	a = '#';
-// 	if(ft_isalnum('t' + 256))
-// 		printf("%c is alphanumeric.\n", a);
-// 	else
-// 		printf("Error.\n");
-// 	return (0);
-// }

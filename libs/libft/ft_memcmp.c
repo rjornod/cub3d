@@ -1,42 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tanja <tanja@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/09/06 14:59:12 by tanja             #+#    #+#             */
+/*   Updated: 2024/10/11 18:36:29 by tanja            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
 
 int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	size_t				i;
-	const unsigned char	*ptr1;
-	const unsigned char	*ptr2;
+	unsigned char	*ptr1;
+	unsigned char	*ptr2;
+	size_t			i;
 
 	i = 0;
-	ptr1 = (const unsigned char *)s1;
-	ptr2 = (const unsigned char *)s2;
-	while (i < n)
-	{
-		if ((unsigned char)ptr1[i] != (unsigned char)ptr2[i])
-			return ((unsigned char)ptr1[i] - (unsigned char)ptr2[i]);
+	ptr1 = (unsigned char *)s1;
+	ptr2 = (unsigned char *)s2;
+	while (i < n && ptr1[i] == ptr2[i])
 		i++;
-	}
-	return (0);
+	if (i == n)
+		return (0);
+	return (ptr1[i] - ptr2[i]);
 }
 
-// int	main(void)
+// int main(void)
 // {
-// 	char str1[] = "Hello, World!";
-// 	char str2[] = "Hello, World!";
-// 	char str3[] = "Hello, world!"; // Different character 'W' vs 'w'
-// 	char str4[] = "Hello!";
+// 	char s1[] = "Hello, World!";
+// 	char s2[] = "Hello, World?";
+// 	int result = ft_memcmp(s1, s2, 13);
 
-// 	printf("memcmp(str1, str2, 13) = %d\n", ft_memcmp(str1, str2, 13));
-// 	return (0);
+// 	printf("%i", result);
 // }

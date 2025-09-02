@@ -1,49 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:21:33 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/15 16:16:51 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
 
-char	*ft_strnstr(const char *big, const char *little, size_t len)
+char	*ft_strnstr(const char *haystack, const char *needle, size_t n)
 {
 	size_t	i;
 	size_t	j;
 
+	if (*needle == '\0')
+		return ((char *)haystack);
 	i = 0;
-	if (ft_strlen(little) == 0)
-		return ((char *)big);
-	while (big[i] && i < len)
+	while (i < n && haystack[i] != '\0')
 	{
 		j = 0;
-		while (big[i + j] == little[j] && little[j]
-			&& big[i + j] && i + j < len)
+		while ((i + j) < n && haystack[i + j] && (haystack[i + j] == needle[j]))
 			j++;
-		if (j == ft_strlen(little))
-			return ((char *)&big[i]);
+		if (needle[j] == '\0')
+			return ((char *)&haystack[i]);
 		i++;
 	}
 	return (NULL);
 }
 
-// int	main(void)
+// int main(void)
 // {
-// 	const char *big = "Hello, World!";
-//     const char *little = "World";
-// 	size_t	n = ft_strlen(big);
-//     // Limit the search to the first 8 characters of 'haystack'
-//     char *result = ft_strnstr(big, little, n);
-//     if (result)
-//         printf("Found '%s' in big string on position %ld\n", 
-//			little, result - big);
-//     else
-//         printf("'%s' not found.\n", little);
-// 	return (0);
+//     char *haystack = "hello world";
+//     char *needle = "wo";
+//     char* result = ft_strnstr(haystack, needle, 10);
+
+//     printf("%s", result);
 // }

@@ -1,58 +1,64 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:04:17 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/13 15:11:55 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
 #include "libft.h"
 
-static int	skipempty(const char *nptr)
+int	ft_atoi(const char	*s)
 {
 	int	i;
+	int	minus;
+	int	result;
 
 	i = 0;
-	while (nptr[i] == ' ' || nptr[i] == '\t' || nptr[i] == '\n'
-		|| nptr[i] == '\v' || nptr[i] == '\f' || nptr[i] == '\r')
+	minus = 1;
+	result = 0;
+	while (s[i] == ' ' || s[i] == '\t' || s[i] == '\n'
+		|| s[i] == '\v' || s[i] == '\f' || s[i] == '\r')
 		i++;
-	return (i);
-}
-
-int	ft_atoi(const char *nptr)
-{
-	int		i;
-	long	r;
-	int		sign;
-
-	r = 0;
-	sign = 1;
-	i = skipempty(nptr);
-	if (nptr[i] == '-' && nptr[i + 1] != '+')
+	if (s[i] == '-')
+		minus = -1;
+	if (s[i] == '-' || s[i] == '+')
+		i++;
+	while (s[i] != '\0' && ft_isdigit(s[i]))
 	{
-		sign = -1;
+		result = result * 10 + (s[i] - '0');
 		i++;
 	}
-	else if (nptr[i] == '+' && nptr[i + 1] != '-')
-		i++;
-	while (nptr[i] >= '0' && nptr[i] <= '9')
-	{
-		r = r * 10 + (nptr[i] - '0');
-		i++;
-		if (r * sign > INT_MAX)
-			return (INT_MAX);
-		if (r * sign < INT_MIN)
-			return (INT_MIN);
-	}
-	return (r * sign);
+	return (result * minus);
 }
 
-// int	main(void)
+// int main(void)
 // {
-// 	printf("Converted number: %d\n", ft_atoi("   -12345xyz"));
-// 	return (0);
+//     // Test Case 1: Simple positive number
+//     char *s1 = "12345";
+//     printf("Test 1 - Expected: 12345, Got: %d\n", ft_atoi(s1));
+
+//     // Test Case 2: Simple negative number
+//     char *s2 = "-6789";
+//     printf("Test 2 - Expected: -6789, Got: %d\n", ft_atoi(s2));
+
+//     // Test Case 3: Number with leading whitespace
+//     char *s3 = "   42";
+//     printf("Test 3 - Expected: 42, Got: %d\n", ft_atoi(s3));
+
+//     // Test Case 4: Number with leading whitespace and sign
+//     char *s4 = "\t\n -56";
+//     printf("Test 4 - Expected: -56, Got: %d\n", ft_atoi(s4));
+
+//     // Test Case 5: No digits
+//     char *s5 = "abc123";
+//     printf("Test 5 - Expected: 0, Got: %d\n", ft_atoi(s5));
 // }

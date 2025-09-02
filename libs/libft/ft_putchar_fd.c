@@ -1,28 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:12:18 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/09 11:27:07 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <unistd.h>
 
 void	ft_putchar_fd(char c, int fd)
 {
-	write(fd, &c, sizeof(c));
+	write(fd, &c, 1);
 }
-
-// int	main(void)
-// {
-// 	char i = 'A';
-//     while (i <= 'Z')
-//     {
-//         ft_putchar_fd(i, 1);
-//         i++;
-//     }
-// }

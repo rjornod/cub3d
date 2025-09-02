@@ -5,39 +5,34 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2025/04/16 12:05:42 by tignatov         ###   ########.fr       */
+/*   Created: 2024/10/07 16:15:32 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/13 12:57:00 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
 #include "libft.h"
 
-char	*ft_strdup(const char *s)
+char	*ft_strdup(const char *s1)
 {
-	char	*ptr;
-	int		i;
-	int		len;
+	int		slen;
+	char	*new_str;
 
-	len = ft_strlen(s);
-	i = 0;
-	ptr = (char *)malloc(len * sizeof(char) + 1);
-	if (!ptr)
+	slen = ft_strlen(s1);
+	new_str = (char *)malloc((slen + 1) * sizeof(char));
+	if (!new_str)
 		return (NULL);
-	while (s[i])
-	{
-		ptr[i] = s[i];
-		i++;
-	}
-	ptr[i] = '\0';
-	return (ptr);
+	ft_strlcpy(new_str, s1, slen + 1);
+	return (new_str);
 }
 
-// int	main(void)
+// int main(void)
 // {
-// 	const char *s = "apple";
-// 	char *s1 = ft_strdup(s);
-
-// 	printf("%s\n", s1);
-// 	free(s1);
-// 	return(0);
+// 	char original[] = "Hello, World!";
+// 	char* duplicate = ft_strdup(original);
+// 	printf("%s", duplicate);
+// 	free(duplicate);
 // }

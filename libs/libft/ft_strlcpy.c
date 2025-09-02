@@ -1,41 +1,58 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/10 09:49:49 by tanja             #+#    #+#             */
+/*   Updated: 2024/10/15 16:15:52 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	size_t	i;
+	size_t	src_len;
 
 	i = 0;
-	if (size == 0)
-		return (ft_strlen(src));
-	while (i < size - 1 && src[i] != '\0')
+	src_len = ft_strlen(src);
+	if (dstsize == 0)
+		return (src_len);
+	while (src[i] != '\0' && i < (dstsize - 1))
 	{
 		dst[i] = src[i];
 		i++;
 	}
-	if (size > 0)
-		dst[i] = '\0';
-	return (ft_strlen(src));
+	dst[i] = '\0';
+	return (src_len);
 }
 
-// int	main(void)
+// int main(void)
 // {
-// 	char src[8] = "Flinder.";
-// 	char dst[10];
-// 	size_t srclen;
+// 	char dst[5];
+// 	const char *src = "HelloWorld";
+// 	size_t dstsize = sizeof(dst); 
+// 	size_t result = ft_strlcpy(dst, src, dstsize);
+// 	printf("Test 1: %zu\n", result);
+// 	printf("Test 1: %s\n\n", dst);
 
-// 	srclen = ft_strlcpy(dst, src, 4);
-// 	printf("the size of src is %zu, dst contains: \"%s\"\n", srclen, dst);
-// 	return (0);
+// 	char dst1[20];
+// 	const char *src1 = "Hello";
+// 	size_t dstsize1 = sizeof(dst1); // dstsize = 20
+// 	size_t result1 = ft_strlcpy(dst1, src1, dstsize1);
+// 	printf("Test 2: %zu\n", result1);
+// 	printf("Test 2: %s\n\n", dst1);
+
+// 	char dst2[5];
+// 	const char *src2 = "Hello";
+// 	size_t result2 = ft_strlcpy(dst2, src2, 0);
+// 	printf("Test 3: %zu\n", result2);
+// 	printf("Test 3: %s\n\n", dst2);
+
 // }

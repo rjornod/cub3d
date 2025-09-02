@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tanja <tanja@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:24:36 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/11 17:13:19 by tanja            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include <stdio.h>
 
 int	ft_toupper(int c)
 {
-	if ('a' <= c && c <= 'z')
-		c -= 32;
-	return (c);
+	if (c >= 'a' && c <= 'z')
+		return (c - 32);
+	else
+		return (c);
 }
 
-// int	main(void)
+// int main(void)
 // {
-// 	char lower = 'a';
-// 	char upper = 'A';
-// 	char sym = '*';
-
-// 	printf("Oringinal: %c, Uppercase: %c\n", lower, ft_toupper(lower));
-// 	return (0);
+//     char res;
+//     res = (unsigned char)ft_toupper(97);
+//     printf("%c", res);
 // }

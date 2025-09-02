@@ -1,44 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:14:24 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/16 12:50:02 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
 
 char	*ft_strchr(const char *s, int c)
 {
-	int		i;
-	char	cchar;
+	unsigned char	cc;
 
-	i = 0;
-	cchar = (char)c;
-	while (s[i])
+	cc = (char)c;
+	while (*s)
 	{
-		if (s[i] == cchar)
-			return ((char *)&s[i]);
-		i++;
+		if (*s == cc)
+			return ((char *)s);
+		s++;
 	}
-	if (s[i] == cchar)
-		return ((char *)&s[i]);
+	if (cc == '\0')
+		return ((char *)s);
 	return (NULL);
 }
 
-// int	main(void)
+// int main(void)
 // {
-// 	char s[]= "Hello, World!";
-// 	char *r1 = ft_strchr(s, 'W');
-// 	char *r2 = ft_strchr(s, '\0');
-// 	char *r3 = ft_strchr(s, 'h');
-// 	if (r2)
-//         printf("Found '\\0' at position: %ld\n", r2 - s);
-//     else
-//         printf("'\\0' not found\n");
-// 	return (0);
+//     char str[] = "hello world";
+//     char c = 'o';
+//     char* result = ft_strchr(str, c);
+
+//     printf("%s", result);
 // }

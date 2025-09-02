@@ -1,34 +1,45 @@
-NAME := libft.a
-SRCS := ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c\
-ft_isprint.c ft_itoa.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c\
-ft_putchar_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c ft_split.c ft_strchr.c ft_strdup.c\
-ft_striteri.c ft_strjoin.c ft_strlcat.c ft_strlcpy.c ft_strlen.c ft_strmapi.c ft_strncmp.c\
-ft_strnstr.c ft_strrchr.c ft_strtrim.c ft_substr.c ft_tolower.c ft_toupper.c\
-ft_printf.c prtchar.c prthexlow.c prthexup.c prtint.c prtptr.c\
-prtstr.c prtunsigint.c get_next_line_bonus.c get_next_line_utils_bonus.c\
-ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c ft_lstiter.c\
-ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c ft_strcmp.c\
-
-OBJS := $(SRCS:%.c=%.o)
-
-CFLAGS ?= -Wall -Wextra -Werror
 
 CC = cc
+CFLAGS = -Wall -Wextra -Werror
+RM = rm -f
+AR = ar
+ARFLAGS = -rcs
 
-all :$(NAME)
+SRCS =  ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c ft_strlcpy.c ft_tolower.c \
+		ft_isascii.c ft_isdigit.c ft_isprint.c ft_itoa.c ft_strtrim.c ft_toupper.c \
+		ft_calloc.c  ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c\
+		ft_putchar_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c ft_strchr.c\
+		ft_strdup.c ft_striteri.c ft_strjoin.c ft_strlcat.c ft_strlen.c ft_substr.c\
+		ft_strmapi.c  ft_strncmp.c ft_strcmp.c ft_strnstr.c ft_strrchr.c ft_split.c\
 
-$(NAME): $(OBJS)
-	ar rcs $@ $^
+SRCS_BONUS = ft_lstnew_bonus.c ft_lstadd_front_bonus.c ft_lstsize_bonus.c ft_lstlast_bonus.c\
+		ft_lstadd_back_bonus.c ft_lstdelone_bonus.c ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstmap_bonus.c\
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+OBJS = ${SRCS:.c=.o}
+OBJS_BONUS = ${SRCS_BONUS:.c=.o}
+
+NAME = libft.a
+
+${NAME}: ${OBJS}
+	${AR} ${ARFLAGS} ${NAME} ${OBJS}
+
+$(OBJS): %.o: %.c libft.h
+	${CC} ${CFLAGS} -c $< -o $@
+
+$(OBJS_BONUS): %.o: %.c libft.h
+	${CC} ${CFLAGS} -c $< -o $@
+
+bonus: ${OBJS} ${OBJS_BONUS}
+	${AR} ${ARFLAGS} ${NAME} ${OBJS} ${OBJS_BONUS}
+
+all: ${NAME}
 
 clean:
-	rm -f $(OBJS)
+	${RM} ${OBJS} ${OBJS_BONUS}
 
 fclean: clean
-	rm -f $(NAME)
+	${RM} ${NAME}
 
-re: fclean all
+re: fclean ${NAME}
 
-.PHONY:	clean fclean all re bonus
+.PHONY:  all clean fclean re

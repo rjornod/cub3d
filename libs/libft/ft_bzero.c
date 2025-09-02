@@ -1,44 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wxi <wxi@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: tanja <tanja@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 12:43:01 by wxi               #+#    #+#             */
-/*   Updated: 2024/06/07 23:17:25 by wxi              ###   ########.fr       */
+/*   Created: 2024/10/07 16:04:41 by tignatov          #+#    #+#             */
+/*   Updated: 2024/10/11 13:26:56 by tanja            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
 void	ft_bzero(void *s, size_t n)
 {
-	size_t				i;
-	unsigned char		*ptr;
+	size_t			i;
+	unsigned char	*ptr;
 
 	ptr = (unsigned char *)s;
 	i = 0;
 	while (i < n)
 	{
-		ptr[i] = '\0';
+		ptr[i] = 0;
 		i++;
 	}
 }
 
-// int	main(void)
-// {
-// 	unsigned char	ptr[5];
-// 	int				i;
-// 	int				n;
-
-// 	i = 0;
-// 	n = 10;
-// 	bzero(ptr, n);
-// 	while(i < n)
-// 	{
-// 		printf("%d", ptr[i]);
-// 		i++;
-// 	}
-// 	return (0);
+// int main() {
+//     char buffer[10] = "Hello";
+//     ft_bzero(buffer, 2);
+//     for (int i = 0; i < 5; i++) {
+//         printf("%d ", buffer[i]);
+//     }
+//     return 0;
 // }
