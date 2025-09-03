@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_outer_walls.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rojornod <rojornod@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 16:02:45 by tignatov          #+#    #+#             */
-/*   Updated: 2025/09/02 17:42:40 by rojornod         ###   ########.fr       */
+/*   Updated: 2025/09/03 13:02:37 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ int	validate_map(t_game *game, char **initial_file, t_render *render)
 	tmp = dup_array(map_to_valid);
 	if (!tmp)
 		return (free_2darray(map_to_valid), 0);
-	if (ft_dfs(tmp, 0, 0, &map) || map_chars_valid(tmp, &map) == false)
+	if (ft_dfs(tmp, 0, 0, &map) || map_chars_valid(game, tmp, &map) == false)
 		return (printf("1.Map is invalid.\n"), free_2darray(tmp),
 			free_2darray(map_to_valid), 0);
 	find_player_position(tmp, render, &map);
-	if (ft_dfs_inside(tmp, (size_t)render->pos_x, (size_t)render->pos_y,
+	if (ft_dfs_inside(tmp, (size_t)render->player_y, (size_t)render->player_x,
 			&map) == true)
 		return (printf("2.Map is invalid. Empty spaces.\n"), free_2darray(tmp),
 			free_2darray(map_to_valid), 0);

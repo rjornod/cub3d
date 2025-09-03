@@ -6,7 +6,7 @@
 /*   By: rojornod <rojornod@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 15:51:12 by rojornod          #+#    #+#             */
-/*   Updated: 2025/09/02 18:02:06 by rojornod         ###   ########.fr       */
+/*   Updated: 2025/09/03 17:46:38 by rojornod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,37 +21,30 @@ t_render	*init_render(void)
 		return (NULL);
 	ft_memset(render, 0, sizeof(t_render));
 
-	render->old_time = 0;
-	render->move_speed = render->frame_time * 5.0;
-	render->rotation_speed = render->frame_time * 3.0;
 	return (render);
 }
 
-void	mlx_start(t_render *render)
+void	mlx_start(t_game *game)
 {
 	printf("starting mlx\n");
-	render->mlx = mlx_init(WIDTH, HEIGHT, "BEST GAME EVER", true);
-	if (!render->mlx)
+	game->render->mlx = mlx_init(WIDTH, HEIGHT, "BEST GAME EVER", true);
+	if (!game->render->mlx)
 	{
 		perror("Failed to initialize MLX42");
 		exit(EXIT_FAILURE);
 	}
 	else
 		printf("mlx started\n");
-	mlx_key_hook(render->mlx, &key_handler, render);
-	create_world(render);
-	draw_player(render);
+	mlx_key_hook(game->render->mlx, &key_handler, game->render);
+	create_world(game);
+	draw_player(game->render);
 }
 
 void	key_handler(mlx_key_data_t keydata, void *param)
 {
 	t_game	*game;
-	printf("Key handler called with key: %d\n", keydata.key);
+
 	game = (t_game *)param;
-	printf("Game pointer: %p\n", game);
-	game->render->time = mlx_get_time();
-	game->render->frame_time = game->render->time - game->render->old_time;
-	game->render->old_time = game->render->time;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
 	{
 		ft_putendl_fd("Goodbye", 1);
@@ -59,56 +52,33 @@ void	key_handler(mlx_key_data_t keydata, void *param)
 	}
 	if (mlx_is_key_down(game->render->mlx, MLX_KEY_W))
 	{
-		game->render->new_pos_x = game->render->pos_x + game->render->dir_x * game->render->move_speed;
-		game->render->new_pos_y = game->render->pos_y + game->render->dir_y * game->render->move_speed;
-		if (game->map[(int)game->render->new_pos_y * MAP_X + (int)game->render->new_pos_x] == 0)
-		{
-			game->render->pos_x = game->render->new_pos_x;
-			game->render->pos_y = game->render->new_pos_y;
-		}
-		// game->render->player_x += game->render->player_delta_x;
-		// game->render->player_y += game->render->player_delta_y;
+		//if (render->map[(int)render->pos_x + render->dir_x *])
+		game->render->player_x += game->render->player_delta_x;
+		game->render->player_y += game->render->player_delta_y;
 	}
 	if (mlx_is_key_down(game->render->mlx, MLX_KEY_S))
 	{
-		game->render->new_pos_x = game->render->pos_x - game->render->dir_x * game->render->move_speed;
-		game->render->new_pos_y = game->render->pos_y - game->render->dir_y * game->render->move_speed;
-		if (game->map[(int)game->render->new_pos_y * MAP_X + (int)game->render->new_pos_x] == 0)
-		{
-			game->render->pos_x = game->render->new_pos_x;
-			game->render->pos_y = game->render->new_pos_y;
-		}
-		
+		game->render->player_x -= game->render->player_delta_x;
+		game->render->player_y -= game->render->player_delta_y;
 	}
 	if (mlx_is_key_down(game->render->mlx, MLX_KEY_D))
 	{
-		game->render->old_dir_x = game->render->dir_x;
-		game->render->dir_x = game->render->dir_x * cos(-game->render->rotation_speed) -  game->render->dir_y * sin(-game->render->rotation_speed);
-		game->render->dir_y = game->render->old_dir_y * sin(-game->render->rotation_speed) + game->render->dir_y * cos(-game->render->rotation_speed);
-		game->render->old_plane_x = game->render->plane_x;
-		game->render->plane_x = game->render->plane_x * cos(-game->render->rotation_speed) - game->render->plane_y * sin(-game->render->rotation_speed);
-		game->render->plane_y = game->render->old_plane_x * sin(-game->render->rotation_speed) + game->render->plane_y * cos(-game->render->rotation_speed);
-		// game->render->player_angle += 0.05;
-		// if (game->render->player_angle > 2 * PI)
-		// 	game->render->player_angle -= 2 * PI;
-		// game->render->player_delta_x = cos(game->render->player_angle) * 5;
-		// game->render->player_delta_y = sin(game->render->player_angle) * 5;
+		game->render->player_angle += 0.05;
+		if (game->render->player_angle > 2 * PI)
+			game->render->player_angle -= 2 * PI;
+		game->render->player_delta_x = cos(game->render->player_angle) * 5;
+		game->render->player_delta_y = sin(game->render->player_angle) * 5;
 	}
 	if (mlx_is_key_down(game->render->mlx, MLX_KEY_A))
 	{
-		game->render->old_dir_x = game->render->dir_x;
-		game->render->dir_x = game->render->dir_x * cos(game->render->rotation_speed) -  game->render->dir_y * sin(game->render->rotation_speed);
-		game->render->dir_y = game->render->old_dir_y * sin(game->render->rotation_speed) + game->render->dir_y * cos(game->render->rotation_speed);
-		game->render->old_plane_x = game->render->plane_x;
-		game->render->plane_x = game->render->plane_x * cos(game->render->rotation_speed) - game->render->plane_y * sin(game->render->rotation_speed);
-		game->render->plane_y = game->render->old_plane_x * sin(game->render->rotation_speed) + game->render->plane_y * cos(game->render->rotation_speed);
-		// game->render->player_angle -= 0.05;
-		// if (game->render->player_angle < 0)
-		// 	game->render->player_angle += 2 * PI;
-		// game->render->player_delta_x = cos(game->render->player_angle) * 5;
-		// game->render->player_delta_y = sin(game->render->player_angle) * 5;
+		game->render->player_angle -= 0.05;
+		if (game->render->player_angle < 0)
+			game->render->player_angle += 2 * PI;
+		game->render->player_delta_x = cos(game->render->player_angle) * 5;
+		game->render->player_delta_y = sin(game->render->player_angle) * 5;
 	}
-	//draw_rays(game->render);
+	printf("[%f]\n", game->render->player_angle);
+	draw_rays(game);
 	draw_player(game->render);
 }
 

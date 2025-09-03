@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_map_inside.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rojornod <rojornod@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tignatov <tignatov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 12:00:19 by tignatov          #+#    #+#             */
-/*   Updated: 2025/09/02 17:43:20 by rojornod         ###   ########.fr       */
+/*   Updated: 2025/09/03 13:11:01 by tignatov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	find_player_position(char **map, t_render *render, t_map *map_for_pos)
 		{
 			if (map[i][j] == map_for_pos->player_letter)
 			{
-				render->pos_x = j;
-				render->pos_y = i;
+				render->player_x = j;
+				render->player_y = i;
 			}
 			j++;
 		}
@@ -107,7 +107,7 @@ bool	count_playes(char c, int *player_val, int *player_flag)
 	return (true);
 }
 
-bool	map_chars_valid(char **map, t_map *map_for_pos)
+bool	map_chars_valid(t_game *game, char **map, t_map *map_for_pos)
 {
 	int	player_val[4] = {0};
 	int	i;
@@ -129,5 +129,9 @@ bool	map_chars_valid(char **map, t_map *map_for_pos)
 	}
 	if (player_count_valid(player_val, player_flag, map_for_pos) == false)
 		return (printf("Wrong input for player.\n"),false);
+	game->map_info.player_letter = map_for_pos->player_letter;
+	game->map_info.player_flag = player_flag;
+	// printf("%c\n",game->map_info.player_letter);
+	// printf("%i\n",game->map_info.player_flag);
 	return (true);
 }

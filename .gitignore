@@ -1,7 +1,6 @@
 
 libs/MLX/
 .vscode
-main.c
 *.o
 *.a
 cub3D

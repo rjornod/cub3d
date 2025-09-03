@@ -1,168 +1,256 @@
-#include "../../include/cub3d.h"
+#include "cub3d.h"
 
-# define MAP_X 25
-# define MAP_Y 14
-
-void	init_r2(t_render *render)
+static void check_horizontal_lines(t_game *game, float a_tan)
 {
-	render->pos_x = 22;
-	render->pos_y = 12;
-	render->dir_x = -1;
-	render->dir_y = 0;
-	render->plane_x = 0;
-	render->plane_y = 0.66;
-	render->time = 0;
-	render->old_time = 0;
-	render->camera_x = 0;
-	render->ray_dir_x = 0;
-	render->ray_dir_y = 0;
+	game->render->horizontal_ray_x_pos = game->render->player_x;
+	game->render->horizontal_ray_y_pos = game->render->player_y;
+	if (game->render->ray_angle > PI) // looking up
+	{
+		game->render->ray_y = (((int)game->render->player_y / 64) * 64) - 0.0001;
+		game->render->ray_x = (game->render->player_y - game->render->ray_y) * a_tan + game->render->player_x;
+		game->render->y_offset = -64; 
+		game->render->x_offset = game->render->y_offset * a_tan; 
+	}
+	else if (game->render->ray_angle < PI) // looking down
+	{
+		game->render->ray_y = (((int)game->render->player_y / 64) * 64) + 64;
+		game->render->ray_x = (game->render->player_y - game->render->ray_y) * a_tan + game->render->player_x;
+		game->render->y_offset = 64; 
+		game->render->x_offset = game->render->y_offset * a_tan; 
+	}
+	else if (game->render->ray_angle == 0 || game->render->ray_angle == PI) // looking straight left or right
+	{
+		game->render->ray_x = game->render->player_x;
+		game->render->ray_y = game->render->player_y;
+		game->render->dof = 8;
+	}
+	while (game->render->dof < 8)
+	{
+		game->render->m_x = (int)(game->render->ray_x) / 64;
+		game->render->m_y = (int)(game->render->ray_y) / 64;
+		if (game->render->m_x >= 0 && game->render->m_x < (int)game->map_info.max_len && 
+            game->render->m_y >= 0 && game->render->m_y < (int)game->map_info.num_rows)
+		{
+			if (game->map[game->render->m_y][game->render->m_x] == '1')
+			{
+				game->render->horizontal_ray_x_pos = game->render->ray_x;
+				game->render->horizontal_ray_y_pos = game->render->ray_y;
+				game->render->h_distance = distance(game->render->player_x, game->render->player_y, game->render->horizontal_ray_x_pos, game->render->horizontal_ray_y_pos, game->render->ray_angle);
+				game->render->dof = 8;
+			}
+			else
+			{
+				game->render->ray_x += game->render->x_offset;
+				game->render->ray_y += game->render->y_offset;
+				game->render->dof += 1;
+			}
+		}
+		else
+			game->render->dof = 8;
+	}
+	//draw_line(render, (int)render->player_x, (int)render->player_y, (int)render->ray_x, (int)render->ray_y);
+		
 }
 
-static void calculate_step(t_render *render)
+static void	check_vertical_lines(t_game *game, float n_tan)
 {
-	if (render->ray_dir_x < 0)
+	game->render->vertical_ray_x_pos = game->render->player_x;
+	game->render->vertical_ray_y_pos = game->render->player_y;
+	if (game->render->ray_angle > P2 && game->render->ray_angle < P3) // looking left
 	{
-		render->step_x = -1;
-		render->side_dist_x = (render->pos_x - render->map_x) * render->delta_dist_x;
+		game->render->ray_x = ((game->render->player_x / 64) * 64) - 0.0001;
+		game->render->ray_y = (game->render->player_x - game->render->ray_x) * n_tan + game->render->player_y;
+		game->render->x_offset = -64;
+		game->render->y_offset = game->render->x_offset * n_tan; 
 	}
-	else
+	else if (game->render->ray_angle < P2 || game->render->ray_angle > P3) // looking right
 	{
-		render->step_y = 1;
-		render->side_dist_x = (render->map_x + 1.0  - render->pos_x) * render->delta_dist_x;
+		game->render->ray_x = ((game->render->player_x / 64) * 64) + 64;
+		game->render->ray_y = (game->render->player_x - game->render->ray_x) * n_tan + game->render->player_y;
+		game->render->x_offset = 64; 
+		game->render->y_offset = game->render->x_offset * n_tan; 
 	}
-	if (render->ray_dir_y < 0)
+	else if (game->render->ray_angle == P2 || game->render->ray_angle == P3) // looking straight up or down
 	{
-		render->step_x = -1;
-		render->side_dist_y = (render->pos_y - render->map_y) * render->delta_dist_y;
+		game->render->ray_x = game->render->player_x;
+		game->render->ray_y = game->render->player_y;
+		game->render->dof = 8;
 	}
-	else
+	while (game->render->dof < 8)
 	{
-		render->step_y = 1;
-		render->side_dist_y = (render->map_y + 1.0  - render->pos_y) * render->delta_dist_y;
+		game->render->m_x = (int)(game->render->ray_x) / 64;
+		game->render->m_y = (int)(game->render->ray_y) / 64;
+		 if (game->render->m_x >= 0 && game->render->m_x < (int)game->map_info.max_len && 
+            game->render->m_y >= 0 && game->render->m_y < (int)game->map_info.num_rows)
+		{
+			if (game->map[game->render->m_y][game->render->m_x] == '1')
+			{
+				game->render->vertical_ray_x_pos = game->render->ray_x;
+				game->render->vertical_ray_y_pos = game->render->ray_y;
+				game->render->v_distance = distance(game->render->player_x, game->render->player_y, game->render->vertical_ray_x_pos, game->render->vertical_ray_y_pos, game->render->ray_angle);
+				game->render->dof = 8;
+			}
+			else //next line
+			{
+				game->render->ray_x += game->render->x_offset;
+				game->render->ray_y += game->render->y_offset;
+				game->render->dof += 1;
+			}
+		}
+		else
+			game->render->dof = 8;
 	}
 }
 
-void	raycasting2(t_game *game)
+// function that will return the distance between the player and the rays end point
+float	distance(float ax, float ay, float bx, float by, float ang)
 {
-	int			i;
-	uint32_t	color;
+	(void)ang;
+	return (sqrt((bx-ax) * (bx-ax) + (by-ay) * (by-ay)));
+}
+
+void	draw_rays(void  *param)
+{
+	float		a_tan;
+	float		n_tan;
+	float		ray_angle_increment;
+	t_game	*game;
+
+	game = (t_game *)param;
+ 	if (!game || !game->render->ray_image || !game->render->ray_image->pixels)
+        return;
+	ft_memset(game->render->ray_image->pixels, 0, WIDTH * HEIGHT * sizeof(int32_t));
+	//calculate the field of view in radians (60 degrees = PI/3)
+	game->render->fov = PI / 3;
+	ray_angle_increment = game->render->fov / (WIDTH / 2); // half width for right side 3d view
+	
+	game->render->ray_angle = game->render->player_angle + (game->render->fov / 2);
+	//angle normalization
+	if (game->render->ray_angle < 0)
+		game->render->ray_angle += 2 * PI;
+	else if (game->render->ray_angle > 2 * PI)
+		game->render->ray_angle -= 2 * PI;
+	game->render->ray = 0;
+	printf("----------------------------------\n");
+	while (game->render->ray < (WIDTH / 2)) // rays for right half only
+	{
+		game->render->h_distance = 1000000;
+		game->render->v_distance = 1000000;
+		game->render->dof = 0;
+		//angle normalization
+		if (game->render->ray_angle < 0)
+			game->render->ray_angle += 2 * PI;
+		if (game->render->ray_angle > 2 * PI)
+			game->render->ray_angle -= 2 * PI;
+		//------------------------------------
+		n_tan = -tan(game->render->ray_angle);
+		a_tan = -1 / tan(game->render->ray_angle);
+		game->render->dof = 0;
+		check_horizontal_lines(game, a_tan);
+		game->render->dof = 0;
+		check_vertical_lines(game, n_tan);
+		if (game->render->v_distance < game->render->h_distance)
+		{
+			game->render->ray_x = game->render->vertical_ray_x_pos;
+			game->render->ray_y = game->render->vertical_ray_y_pos;
+			game->render->final_dist = game->render->v_distance;
+		}
+		if (game->render->h_distance < game->render->v_distance)
+		{
+			game->render->ray_x = game->render->horizontal_ray_x_pos;
+			game->render->ray_y = game->render->horizontal_ray_y_pos;
+			game->render->final_dist = game->render->h_distance;
+		}
+		game->render->correct_distance = game->render->final_dist * cos(game->render->ray_angle - game->render->player_angle); //fisheye correction
+		if (game->render->correct_distance < 1.0) //prevent division by zero 
+			game->render->correct_distance = 1.0;
+		game->render->line_height = (64 * HEIGHT) / game->render->correct_distance; //calculate wall height based on the distance
+		// cap the line height
+		if (game->render->line_height > HEIGHT)
+			game->render->line_height = HEIGHT;
+		if (game->render->line_height < 1)
+			game->render->line_height = 1;
+		
+		// Only draw every 8th ray to avoid cluttering the 2D view
+	
+		if (game->render->ray % 8 == 0)
+			draw_line(game->render, (int)game->render->player_x, (int)game->render->player_y, (int)game->render->ray_x, (int)game->render->ray_y);
+		
+		draw_col(game->render);
+		//line offset
+		game->render->line_offset = (HEIGHT / 2) - (game->render->line_height / 2);
+		game->render->ray++;
+		game->render->ray_angle -= ray_angle_increment;
+		
+	}
+	printf("----------------------------------\n");
+}
+
+static int	determine_steps(float delta_x, float delta_y)
+{
+	if (fabs(delta_x) > fabs(delta_y))
+		return ((int)fabs(delta_x));
+	else
+		return ((int)fabs(delta_y));
+}
+
+int	draw_line(t_render *render, int begin_x, int begin_y, int end_x, int end_y)
+{
+	float	delta_x;
+	float	delta_y;
+	float	current_x;
+	float	current_y;
+	float	step_x;
+	float	step_y;
+	int		steps;
+	int		i;
 
 	i = 0;
-	while (i < WIDTH)
+	delta_y = end_y - begin_y;
+	delta_x = end_x - begin_x;
+	steps = determine_steps(delta_x, delta_y);
+	//printf("steps [%d\n", steps);
+	step_x = delta_x / steps;
+	step_y = delta_y / steps;
+	current_x = begin_x;
+	current_y = begin_y;
+	while (i <= steps)
 	{
-		game->render->camera_x = 2 * i / (double)WIDTH - 1;
-		game->render->ray_dir_x = game->render->dir_x + game->render->plane_x * game->render->camera_x;
-		game->render->ray_dir_y = game->render->dir_y + game->render->plane_y * game->render->camera_x;
-		game->render->map_x = (int)game->render->pos_x;
-		game->render->map_y = (int)game->render->pos_y;
-		if (game->render->ray_dir_x == 0)
-			game->render->delta_dist_x = 1e30;
-		else
-			game->render->delta_dist_x = fabs(1.0 / game->render->ray_dir_x);
-		if (game->render->ray_dir_y == 0)
-			game->render->delta_dist_y = 1e30;
-		else
-			game->render->delta_dist_y = fabs(1.0 / game->render->ray_dir_y);
-		game->render->hit = 0;
-		calculate_step(game->render);
-		//dda loop
-		while (game->render->hit == 0)
-		{
-			if (game->render->side_dist_x < game->render->side_dist_y)
-			{
-				game->render->side_dist_x += game->render->delta_dist_x;
-				game->render->map_x += game->render->step_x;
-				game->render->side = 0;
-			}
-			else
-			{
-				game->render->side_dist_y += game->render->delta_dist_y;
-				game->render->map_y += game->render->step_y;
-				game->render->side = 1;			
-			}
-			if (game->render->map_x >= 0 && game->render->map_x < MAP_X && 
-				game->render->map_y >= 0 && game->render->map_y < MAP_Y)
-			{
-				size_t map_index = game->render->map_y * game->map_info->max_len + game->render->map_x;
-				if (map_index < (game->map_info->num_rows * game->map_info->max_len))
-				{
-					if (ft_strcmp(game->map[map_index], "1") == 0)
-						game->render->hit = 1;
-				}
-			}
-			else 
-				game->render->hit = 1; //hit wall
-			
-		}
-		if (game->render->side == 0)
-				game->render->perp_wall_dist = (game->render->side_dist_x - game->render->delta_dist_x);
-		else
-			game->render->perp_wall_dist = (game->render->side_dist_y - game->render->delta_dist_y);
-		game->render->line_height = (int)(HEIGHT / game->render->perp_wall_dist);
-
-		game->render->draw_start = (-game->render->line_height / 2) + (HEIGHT / 2);
-		if (game->render->draw_start < 0)
-			game->render->draw_start = 0;
-		game->render->draw_end = (game->render->line_height / 2) + (HEIGHT / 2);
-		if (game->render->draw_end >= HEIGHT)
-			game->render->draw_end = HEIGHT - 1;
-		if (game->render->side == 1)
-				color = WALL;
-			else
-				color = FLOOR;
-		draw_col(game->render, i);
+		//only drawing rays on right half of the window
+        if ((int)current_x >= 0 && (int)current_x < (WIDTH / 2) && 
+            (int)current_y >= 0 && (int)current_y < HEIGHT)
+            mlx_put_pixel(render->ray_image, (int)current_x, (int)current_y, 0xFF0000FF);
+        current_x += step_x;
+        current_y += step_y;
 		i++;
 	}
+	printf("[%f]\n", render->ray_angle);
+	
+	return (0);
 }
 
-void draw_col(t_render *render, int x)
+void	draw_col(t_render *render)
 {
-    // int col_x;
-    // int wall_start;
-    // int wall_end;
-    // uint32_t wall_color;
-    // int y;
+	int	col_x;
+	int	wall_start;
+	int wall_end;
+	int y;
 
-    // // Calculate column position for 3D view (right half of screen)
-    // col_x = (WIDTH / 2) + (render->ray * (WIDTH / 2) / 64);
-    // wall_start = (HEIGHT / 2) - (render->line_height / 2);
-    // wall_end = (HEIGHT / 2) + (render->line_height / 2);
-    
-    // // Choose wall color based on side for depth effect
-    // if (render->side == 1)
-    //     wall_color = WALL / 2;  // Darker for depth
-    // else
-    //     wall_color = WALL;
-    
-    // // Draw the vertical column
-    // y = 0;
-    // while (y < HEIGHT)
-    // {
-    //     if (y < wall_start)
-    //         mlx_put_pixel(render->ray_image, col_x, y, 0x87CEEBFF); // Sky
-    //     else if (y > wall_end)
-    //         mlx_put_pixel(render->ray_image, col_x, y, 0x8B4513FF); // Floor
-    //     else
-    //         mlx_put_pixel(render->ray_image, col_x, y, wall_color); // Wall
-    //     y++;
-    // }
-	 int y;
-    uint32_t wall_color;
-    
-    if (render->side == 1)
-        wall_color = WALL / 2;
-    else
-        wall_color = WALL;
-    
-    y = 0;
-    while (y < HEIGHT)
-    {
-        if (y < render->draw_start)
-            mlx_put_pixel(render->ray_image, x, y, 0x87CEEBFF); // Sky
-        else if (y > render->draw_end)
-            mlx_put_pixel(render->ray_image, x, y, 0x8B4513FF); // Floor
-        else
-            mlx_put_pixel(render->ray_image, x, y, wall_color); // Use calculated color
-        y++;
-    }
+	y = 0;
+	// Draw 3D view on the right half of the screen
+	col_x = (WIDTH / 2) + render->ray;
+	if (col_x >= WIDTH)
+		return ;
+	wall_start = (HEIGHT / 2) - (render->line_height / 2);
+	wall_end = (HEIGHT / 2) + (render->line_height / 2);
+	while (y < HEIGHT)
+	{
+		if (y < wall_start)
+			 mlx_put_pixel(render->ray_image, col_x, y, 0x87CEEBFF);
+		else if (y > wall_end)
+			mlx_put_pixel(render->ray_image, col_x, y, 0x8B4513FF);
+		else
+			mlx_put_pixel(render->ray_image, col_x, y, WALL);
+		y++;
+	}
 }
